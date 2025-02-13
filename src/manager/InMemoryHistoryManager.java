@@ -29,7 +29,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         removeNode(newHashMap.get(id));
     }
 
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<Task>(oldTail, task, null);
         tail = newNode;
@@ -40,7 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             oldTail.next = newNode;
     }
 
-    public List<Task> getTasks() {
+    private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         Node<Task> firstNode = head;
         while (firstNode != null) {
@@ -50,7 +50,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
-    public void removeNode(Node<Task> node) {
+    private void removeNode(Node<Task> node) {
         if (node != null) {
             Node<Task> next = node.next;
             Node<Task> prev = node.prev;
