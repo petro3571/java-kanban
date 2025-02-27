@@ -13,7 +13,7 @@ public class Epic extends Task {
     }
 
     public Epic(Integer id, Status status,String name, String description, List<Integer> subtaskIds) {
-        super(id, status,name,description);
+        super(id, status, name, description);
         this.subtaskIds = subtaskIds;
     }
 
