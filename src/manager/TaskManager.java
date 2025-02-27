@@ -3,7 +3,6 @@ package manager;
 import typetask.Epic;
 import typetask.Subtask;
 import typetask.Task;
-
 import java.util.List;
 
 public interface TaskManager {
