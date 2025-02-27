@@ -9,7 +9,7 @@ public class Subtask extends Task {
     }
     
     public Subtask(Status status, String description, String name, int id) {
-        super(status,description,name);
+        super(status, description, name);
         this.setId(id);
     }
 
