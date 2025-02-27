@@ -175,10 +175,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 List<Integer> newListSubId = new ArrayList<>();
                 String str = splitString[5].substring(1);
                 String newStr = splitString[6].substring(1,2);
-                int SubId = Integer.parseInt(str);
-                int SubbId = Integer.parseInt(newStr);
-                newListSubId.add(SubId);
-                newListSubId.add(SubbId);
+                int firstId = Integer.parseInt(str);
+                int secondId = Integer.parseInt(newStr);
+                newListSubId.add(firstId);
+                newListSubId.add(secondId);
                 return new Epic(id,status,name,description,newListSubId);
             case SUBTASK:
                     int count = Integer.parseInt(splitString[5]);
