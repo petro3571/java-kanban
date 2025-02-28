@@ -5,11 +5,13 @@ public class Task {
     private String description;
     private Status status;
     private int id;
+    protected TypeTask typeTask;
 
     public Task(Status status, String description, String name) {
         this.status = status;
         this.description = description;
         this.name = name;
+        this.typeTask = TypeTask.TASK;
     }
 
     public Task(int id, Status status, String description, String name) {
@@ -17,6 +19,7 @@ public class Task {
         this.status = status;
         this.description = description;
         this.name = name;
+        this.typeTask = TypeTask.TASK;
     }
 
     public Task getSnapshot() {
@@ -53,6 +56,10 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TypeTask getTypeTask() {
+        return this.typeTask;
     }
 
     @Override
