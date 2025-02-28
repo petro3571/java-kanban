@@ -1,6 +1,4 @@
-package Exceptions;
-
-import java.io.IOException;
+package exceptions;
 
 public class ManagerSaveException extends RuntimeException {
     public ManagerSaveException(String message) {
