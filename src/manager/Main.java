@@ -84,8 +84,6 @@ public class Main {
             System.out.println(restoreFBTM.getAllSubtasks());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Файла нет.");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } finally {
             tempfile.deleteOnExit();
         }

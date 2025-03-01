@@ -21,94 +21,58 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void deleteTaskByIndex(int id) {
         super.deleteTaskByIndex(id);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void deleteEpicByIndex(int id) {
         super.deleteEpicByIndex(id);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void deleteSubtaskByIndex(int id) {
         super.deleteSubtaskByIndex(id);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void addEpic(Epic epic) {
         super.addEpic(epic);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void addTask(Task task) {
         super.addTask(task);
-        try {
             save();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    private void save() throws IOException {
+    private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.valueOf(path)))) {
             for (Task task : getAllTasks()) {
                 bw.write(toString(task));
@@ -127,7 +91,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(Path path) throws IOException {
+    public static FileBackedTaskManager loadFromFile(Path path) throws FileNotFoundException {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(path);
         FileReader reader = new FileReader(String.valueOf(path));
         int id;
