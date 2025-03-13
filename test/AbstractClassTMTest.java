@@ -171,4 +171,70 @@ abstract class AbstractClassTMTest<T extends TaskManager> {
 
         assertEquals(2, taskManager.getHistory().size());
     }
+
+    @Test
+    void shouldBeCurrStatusEpic() {
+        Epic epic1 = new Epic("epic1", "descriptionEpic1");
+        taskManager.addEpic(epic1);
+
+        Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1", epic1);
+        taskManager.addSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2", epic1);
+        taskManager.addSubtask(subtask2);
+
+        taskManager.updateEpicStatus(epic1);
+
+        Epic epic2 = new Epic("epic2", "descriptionEpic2");
+        taskManager.addEpic(epic2);
+
+        Subtask subtask3 = new Subtask(Status.DONE, "descriptionSub3", "subtask3", epic2);
+        taskManager.addSubtask(subtask3);
+
+        Subtask subtask4 = new Subtask(Status.DONE, "descriptionSub4", "subtask4", epic2);
+        taskManager.addSubtask(subtask4);
+
+        taskManager.updateEpicStatus(epic2);
+
+        Epic epic3 = new Epic("epic3", "descriptionEpic3");
+        taskManager.addEpic(epic3);
+
+        Subtask subtask5 = new Subtask(Status.NEW, "descriptionSub5", "subtask5", epic3);
+        taskManager.addSubtask(subtask5);
+
+        Subtask subtask6 = new Subtask(Status.DONE, "descriptionSub6", "subtask6", epic3);
+        taskManager.addSubtask(subtask6);
+
+        taskManager.updateEpicStatus(epic3);
+
+        Epic epic4 = new Epic("epic4", "descriptionEpic4");
+        taskManager.addEpic(epic4);
+
+        Subtask subtask7 = new Subtask(Status.IN_PROGRESS, "descriptionSub7", "subtask7", epic4);
+        taskManager.addSubtask(subtask7);
+
+        Subtask subtask8 = new Subtask(Status.IN_PROGRESS, "descriptionSub8", "subtask8", epic4);
+        taskManager.addSubtask(subtask8);
+
+        taskManager.updateEpicStatus(epic4);
+
+        assertEquals(Status.NEW, epic1.getStatus());
+        assertEquals(Status.DONE, epic2.getStatus());
+        assertEquals(Status.IN_PROGRESS, epic3.getStatus());
+        assertEquals(Status.IN_PROGRESS, epic4.getStatus());
+    }
+
+    @Test
+    void shouldBeSubtasksEpic() {
+        Epic epic1 = new Epic("epic1", "descriptionEpic1");
+        taskManager.addEpic(epic1);
+
+        Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1", epic1);
+        taskManager.addSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2", epic1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(taskManager.getEpicByIndex(subtask1.getEpic().getId()), subtask1.getEpic());
+    }
 }

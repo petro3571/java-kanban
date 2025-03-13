@@ -1,5 +1,8 @@
 package typetask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private Epic epic;
 
@@ -9,10 +12,16 @@ public class Subtask extends Task {
         this.typeTask = TypeTask.SUBTASK;
     }
 
-    public Subtask(Status status, String description, String name, Epic epic, int id) {
-        super(status, description, name);
+    public Subtask(Status status, String description, String name, Epic epic, int id, Duration duration, LocalDateTime startTime) {
+        super(status, description, name, duration, startTime);
         this.epic = epic;
         this.setId(id);
+        this.typeTask = TypeTask.SUBTASK;
+    }
+
+    public Subtask(Status status, String description, String name, Duration duration, LocalDateTime startTime, Epic epic) {
+        super(status, description, name, duration, startTime);
+        this.epic = epic;
         this.typeTask = TypeTask.SUBTASK;
     }
 
@@ -24,7 +33,9 @@ public class Subtask extends Task {
     public String toString() {
         return "Subtask{" +
                 "id = " + getId() + ", name = " + getName() + ", description = " +
-                getDescription() + ", status = " + getStatus() +
+                getDescription() + ", status = " + getStatus() + ", duration=" +
+                duration +
+                ", startTime=" + startTime +
                 '}';
     }
 }

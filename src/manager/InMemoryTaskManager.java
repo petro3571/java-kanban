@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerSaveException;
 import typetask.Epic;
 import typetask.Status;
 import typetask.Subtask;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks = new HashMap<>();
@@ -36,6 +38,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
+//        for (Task t : getAllTasks()) {
+//            if (t.isTimeCross(task)) {
+//                throw new ManagerSaveException("Ошибка: пересечение времен.");
+//            }
+//        }
         task.setId(idCounter());
         tasks.put(task.getId(), task);
     }
@@ -73,6 +80,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+        for (Task t : getAllTasks()) {
+            if (t.getId() != task.getId() && t.isTimeCross(task)) {
+                throw new ManagerSaveException("Ошибка: пересечение времен.");
+            }
+        }
         if (task != null) {
             tasks.put(task.getId(), task);
         }
@@ -166,17 +178,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getEpicSubtasks(int id) {
-        ArrayList<Subtask> newListSubtasks = new ArrayList<>();
-        for (Subtask task : subtasks.values()) {
-            Epic newEpic = task.getEpic();
-            if (newEpic.getId() == id) {
-                newListSubtasks.add(task);
-            }
-        }
-        return newListSubtasks;
+//        List<Subtask> newListSubtasks = new ArrayList<>();
+//        for (Subtask task : subtasks.values()) {
+//            Epic newEpic = task.getEpic();
+//            if (newEpic.getId() == id) {
+//                newListSubtasks.add(task);
+//            }
+//        }
+//        return newListSubtasks;
+        return subtasks.values().stream()
+                .filter(subtask -> subtask.getEpic().getId() == id)
+                .collect(Collectors.toList());
     }
 
-    private void updateEpicStatus(Epic epic) {
+    @Override
+    public void updateEpicStatus(Epic epic) {
         List<Integer> subtaskIds = epic.getSubtasksIds();
         if (subtaskIds.isEmpty()) {
             epic.setStatus(Status.NEW);
