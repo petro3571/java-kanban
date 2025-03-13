@@ -113,6 +113,7 @@ public class Task {
         }
         return !(this.getStartTime().isAfter(task.getEndTime()) || this.getEndTime().isBefore(task.getStartTime()));
     }
+
     @Override
     public String toString() {
         return "Task{" +

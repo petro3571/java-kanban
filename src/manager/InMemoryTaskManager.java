@@ -38,11 +38,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
-//        for (Task t : getAllTasks()) {
-//            if (t.isTimeCross(task)) {
-//                throw new ManagerSaveException("Ошибка: пересечение времен.");
-//            }
-//        }
         task.setId(idCounter());
         tasks.put(task.getId(), task);
     }
