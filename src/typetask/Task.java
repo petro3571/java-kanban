@@ -29,7 +29,7 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public Task (Status status, String description, String name, Duration duration, LocalDateTime startTime) {
+    public Task(Status status, String description, String name, Duration duration, LocalDateTime startTime) {
         this.status = status;
         this.description = description;
         this.name = name;
@@ -106,6 +106,14 @@ public class Task {
         return startTime.plus(duration);
     }
 
+    public boolean isTimeCross(Task task) {
+        if (task.getStartTime() == null || task.getEndTime() == null ||
+                this.getStartTime() == null || this.getEndTime() == null) {
+            return false;
+        }
+        return !(this.getStartTime().isAfter(task.getEndTime()) || this.getEndTime().isBefore(task.getStartTime()));
+    }
+    
     @Override
     public String toString() {
         return "Task{" +
@@ -116,12 +124,5 @@ public class Task {
                 ", startTime=" + startTime +
                 ", id=" + id +
                 '}';
-    }
-    public boolean isTimeCross(Task task) {
-        if (task.getStartTime() == null || task.getEndTime() == null ||
-                this.getStartTime() == null || this.getEndTime() == null) {
-            return false;
-        }
-        return !(this.getStartTime().isAfter(task.getEndTime()) || this.getEndTime().isBefore(task.getStartTime()));
     }
 }
