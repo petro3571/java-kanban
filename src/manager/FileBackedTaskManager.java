@@ -6,14 +6,12 @@ import java.io.*;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static typetask.Task.DATE_TIME_FORMATTER;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private Path path;
-    private TreeSet<Task> prioritizedTasksSet;
-    private boolean isPrioritizedTasksSetUpdated = false;
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy | HH:mm");
 
     public FileBackedTaskManager(Path path) {
         this.path = path;
@@ -28,21 +26,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.addSubtask(subtask);
         setDurationStartAndEndTimeEpic(subtask.getEpic());
         save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
-            save();
-        isPrioritizedTasksSetUpdated = false;
+        save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
             save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
@@ -50,21 +45,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.updateSubtask(subtask);
         setDurationStartAndEndTimeEpic(subtask.getEpic());
             save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
     public void deleteTaskByIndex(int id) {
         super.deleteTaskByIndex(id);
             save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
     public void deleteEpicByIndex(int id) {
         super.deleteEpicByIndex(id);
             save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
@@ -72,14 +64,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.deleteSubtaskByIndex(id);
         setDurationStartAndEndTimeEpic(getSubtaskByIndex(id).getEpic());
             save();
-        isPrioritizedTasksSetUpdated = false;
     }
 
     @Override
     public void addEpic(Epic epic) {
         super.addEpic(epic);
+        if (epic.getEndTime() != null) {
             save();
-        isPrioritizedTasksSetUpdated = false;
+        }
     }
 
     @Override
@@ -92,7 +84,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.addTask(task);
         if (!(task.getDuration() == null || task.getStartTime() == null)) {
             save();
-            isPrioritizedTasksSetUpdated = false;
         }
     }
 
@@ -153,7 +144,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String description = splitString[4];
         Long durationLong = Long.parseLong(splitString[5]);
         Duration duration = Duration.ofMinutes(durationLong);
-        LocalDateTime localDateTime = LocalDateTime.parse(splitString[6]);
+        LocalDateTime localDateTime = LocalDateTime.parse(splitString[6], DATE_TIME_FORMATTER);
         switch (type) {
             case TASK:
                 return new Task(id, status, description, name, duration, localDateTime);
@@ -167,13 +158,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи");
         }
-    }
-
-    public TreeSet<Task> getPrioritizedTasksSet() {
-        if (!isPrioritizedTasksSetUpdated) {
-            updatePrioritizedTasksSet();
-        }
-        return prioritizedTasksSet;
     }
 
     private void save() {
@@ -197,32 +181,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private String toString(Task task) {
         return String.join(",", String.valueOf(task.getId()), task.getTypeTask().toString(), task.getName(),
-                task.getStatus().name(), task.getDescription(), String.valueOf(task.getDuration().toMinutes()), String.valueOf(task.getStartTime()));
+                task.getStatus().name(), task.getDescription(), String.valueOf(task.getDuration().toMinutes()), String.valueOf(task.getStartTime().format(DATE_TIME_FORMATTER)));
     }
 
     private String toString(Epic epic) {
         return String.join(",", String.valueOf(epic.getId()), epic.getTypeTask().toString(), epic.getName(),
-                epic.getStatus().name(), epic.getDescription(), String.valueOf(epic.getDuration().toMinutes()),String.valueOf(epic.getStartTime()), epic.getSubtasksIds().toString());
+                epic.getStatus().name(), epic.getDescription(), String.valueOf(epic.getDuration().toMinutes()),String.valueOf(epic.getStartTime().format(DATE_TIME_FORMATTER)), epic.getSubtasksIds().toString());
     }
 
     private String toString(Subtask subtask) {
         return String.join(",", String.valueOf(subtask.getId()), subtask.getTypeTask().toString(),
-                subtask.getName(), subtask.getStatus().name(), subtask.getDescription(),String.valueOf(subtask.getDuration().toMinutes()),String.valueOf(subtask.getStartTime()), String.valueOf(subtask.getEpic().getId()));
-    }
-
-    private void updatePrioritizedTasksSet() {
-        prioritizedTasksSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-        for (Task task : getAllTasks()) {
-            if (!(task.getStartTime() == null)) {
-                prioritizedTasksSet.add(task);
-            }
-        }
-        for (Subtask subtask : getAllSubtasks()) {
-            if (!(subtask.getStartTime() == null)) {
-                prioritizedTasksSet.add(subtask);
-            }
-        }
-        isPrioritizedTasksSetUpdated = true;
+                subtask.getName(), subtask.getStatus().name(), subtask.getDescription(),String.valueOf(subtask.getDuration().toMinutes()),String.valueOf(subtask.getStartTime().format(DATE_TIME_FORMATTER)), String.valueOf(subtask.getEpic().getId()));
     }
 
     private void setDurationStartAndEndTimeEpic(Epic epic) {
@@ -239,8 +208,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             epic.setDuration(newDuration.plus(newSubtask.getDuration()));
         }
-//        epic.setDuration(Duration.between(epic.getStartTime(), epic.getEndTime()));
-
         updateEpicStatus(epic);
     }
 }

@@ -107,7 +107,7 @@ abstract class AbstractClassTMTest<T extends TaskManager> {
         subtask2.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask2);
 
-        System.out.println("new Epic " + taskManager.getEpicByIndex(epic1.getId()));
+        taskManager.getEpicByIndex(epic1.getId()); // эпик в историю
 
         boolean isDifferentType = taskManager.getHistory().get(0).getName().equals(epic1.getName());
 
@@ -139,7 +139,7 @@ abstract class AbstractClassTMTest<T extends TaskManager> {
         subtask2.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask2);
 
-        System.out.println("new Epic " + taskManager.getEpicByIndex(epic1.getId()));
+        taskManager.getEpicByIndex(epic1.getId()); // эпик в историю
         taskManager.deleteEpicByIndex(epic1.getId());
 
         assertEquals(1, taskManager.getHistory().size());
@@ -159,13 +159,15 @@ abstract class AbstractClassTMTest<T extends TaskManager> {
 
         subtask1.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask1);
-        System.out.println("Обновленный эпик " + taskManager.getSubtaskByIndex(subtask1.getId()));
+
+        taskManager.getSubtaskByIndex(subtask1.getId()); // субтаск в историю
 
         subtask2.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask2);
-        System.out.println("Обновленный эпик " + taskManager.getSubtaskByIndex(subtask2.getId()));
 
-        System.out.println("Обновленный эпик " + taskManager.getEpicByIndex(epic1.getId()));
+        taskManager.getSubtaskByIndex(subtask2.getId()); // субтаск в историю
+
+        taskManager.getEpicByIndex(epic1.getId()); // эпик в историю
 
         taskManager.deleteSubtaskByIndex(subtask1.getId());
 

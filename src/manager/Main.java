@@ -61,8 +61,8 @@ public class Main {
             tempfile.deleteOnExit();
         }
 //        System.out.println(newTM.getPrioritizedTasksSet());
+//        printSprint6WorkProgram();
 //        printSprint7WorkProgram();
-//        printSprint8WorkProgram();
     }
 
     private static void printAllTasks(TaskManager manager) {
@@ -89,7 +89,7 @@ public class Main {
         }
     }
 
-    private static void printSprint7WorkProgram() {
+    private static void printSprint6WorkProgram() {
         TaskManager taskManager =  Managers.getDefaultTaskManager();
         Task task1 = new Task(Status.NEW, "Купить продукты", "Лента");
         taskManager.addTask(task1);
@@ -142,7 +142,7 @@ public class Main {
         System.out.println();
     }
 
-    private static void printSprint8WorkProgram() {
+    private static void printSprint7WorkProgram() {
         File tempfile = null;
         try {
             tempfile = File.createTempFile("test1","csv");

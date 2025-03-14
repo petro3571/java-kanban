@@ -65,12 +65,12 @@ public class InMemoryHistoryManagerTest extends AbstractClassTMTest {
 
         subtask1.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(subtask1);
-        System.out.println("Обновленный субтаск1 " + taskManager.getSubtaskByIndex(subtask1.getId()));
+        taskManager.getSubtaskByIndex(subtask1.getId()); //обновленный субтаск1
         taskManager.updateSubtask(subtask1);
 
         subtask2.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask2);
-        System.out.println("Обновленный субтаск2 " + taskManager.getSubtaskByIndex(subtask2.getId()));
+        taskManager.getSubtaskByIndex(subtask2.getId()); // обновленный субтаск2
 
 
         subtask2.setStatus(Status.DONE);

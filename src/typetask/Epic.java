@@ -49,7 +49,7 @@ public class Epic extends Task {
                 "id = " + getId() + ", name = " + getName() + ", description = " +
                 getDescription() + ", status = " + getStatus() + ", duration=" +
                 duration +
-                ", startTime=" + startTime +
+                ", startTime=" + startTime.format(DATE_TIME_FORMATTER) +
                 ", subtaskIds =" + subtaskIds +
                 '}';
     }

@@ -2,6 +2,7 @@ package typetask;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Task {
     private String name;
@@ -11,6 +12,8 @@ public class Task {
     protected TypeTask typeTask;
     protected Duration duration;
     protected LocalDateTime startTime;
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy | HH:mm");
+
 
     public Task(Status status, String description, String name) {
         this.status = status;
@@ -86,10 +89,6 @@ public class Task {
         return duration;
     }
 
-    public long getDurationInMinutes(Duration duration) {
-        return duration.toMinutes();
-    }
-
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
@@ -121,7 +120,7 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 ", duration=" + duration +
-                ", startTime=" + startTime +
+                ", startTime=" + startTime.format(DATE_TIME_FORMATTER) +
                 ", id=" + id +
                 '}';
     }
