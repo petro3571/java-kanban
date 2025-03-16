@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistoryManager();
-    protected Set<Task> prioritizedTasksSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));;
+    protected Set<Task> prioritizedTasksSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     protected int index = 1;
 
     @Override
@@ -257,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void isTaskCrossAnother(Task task) throws ManagerSaveException{
+    public void isTaskCrossAnother(Task task) throws ManagerSaveException {
         if (task.getStartTime() == null || task.getDuration() == null) {
             return;
         }
@@ -269,7 +269,8 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Task t : prioritizedTasksSet) {
             if (task.getEndTime().isAfter(t.getStartTime()) && task.getStartTime().isBefore(t.getEndTime())) {
-                throw new ManagerSaveException("Ошибка: пересечение времен.");            }
+                throw new ManagerSaveException("Ошибка: пересечение времен.");
+            }
         }
         prioritizedTasksSet.add(task);
     }
