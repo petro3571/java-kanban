@@ -24,7 +24,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
-        setDurationStartAndEndTimeEpic(subtask.getEpic());
         save();
     }
 
@@ -43,7 +42,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
-        setDurationStartAndEndTimeEpic(subtask.getEpic());
             save();
     }
 
@@ -62,7 +60,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteSubtaskByIndex(int id) {
         super.deleteSubtaskByIndex(id);
-        setDurationStartAndEndTimeEpic(getSubtaskByIndex(id).getEpic());
             save();
     }
 
@@ -76,11 +73,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void addTask(Task task) {
-        for (Task t : getAllTasks()) {
-            if (t.isTimeCross(task)) {
-                throw new ManagerSaveException("Ошибка: пересечение времен.");
-            }
-        }
         super.addTask(task);
         if (!(task.getDuration() == null || task.getStartTime() == null)) {
             save();
@@ -192,22 +184,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private String toString(Subtask subtask) {
         return String.join(",", String.valueOf(subtask.getId()), subtask.getTypeTask().toString(),
                 subtask.getName(), subtask.getStatus().name(), subtask.getDescription(),String.valueOf(subtask.getDuration().toMinutes()),String.valueOf(subtask.getStartTime().format(DATE_TIME_FORMATTER)), String.valueOf(subtask.getEpic().getId()));
-    }
-
-    private void setDurationStartAndEndTimeEpic(Epic epic) {
-        List<Integer> newList = epic.getSubtasksIds();
-        Duration newDuration = epic.getDuration();
-        for (Integer id : newList) {
-            Subtask newSubtask = getSubtaskByIndex(id);
-            LocalDateTime endSubTaskTime = newSubtask.getEndTime();
-            if (epic.getStartTime() == null || newSubtask.getStartTime().isBefore(epic.getStartTime())) {
-                epic.setStartTime(newSubtask.getStartTime());
-            }
-            if (epic.getEndTime() == null || newSubtask.getEndTime().isAfter(epic.getEndTime())) {
-                epic.setEndTime(endSubTaskTime);
-            }
-            epic.setDuration(newDuration.plus(newSubtask.getDuration()));
-        }
-        updateEpicStatus(epic);
     }
 }

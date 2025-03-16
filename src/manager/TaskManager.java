@@ -4,7 +4,7 @@ import typetask.Epic;
 import typetask.Subtask;
 import typetask.Task;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Set;
 
 public interface TaskManager {
     Task getTaskByIndex(int id);
@@ -49,7 +49,9 @@ public interface TaskManager {
 
     void updateEpicStatus(Epic epic);
 
-    TreeSet<Task> getPrioritizedTasksSet();
+    List<Task> getPrioritizedTasks();
 
-    void updatePrioritizedTasksSet();
+    void setDurationStartAndEndTimeEpic(Epic epic);
+
+    void isTaskCrossAnother(Task task);
 }

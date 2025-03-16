@@ -23,23 +23,27 @@ public class Main {
 
         FileBackedTaskManager newTM = new FileBackedTaskManager(tempfile.toPath());
 
-        Task task1 = new Task(Status.NEW, "Купить продукты", "Лента", Duration.ofMinutes(30), LocalDateTime.now().minusHours(1));
+        Task task1 = new Task(Status.NEW, "Купить продукты", "Лента", Duration.ofMinutes(30), LocalDateTime.now().minusDays(1));
         newTM.addTask(task1);
 
-        Task taskFirst = newTM.getTaskByIndex(task1.getId());
-        taskFirst.setStatus(Status.IN_PROGRESS);
+        Task taskFirst = new Task(Status.NEW, "Купить продукты", "Лента", Duration.ofMinutes(30), LocalDateTime.now().minusWeeks(9));
+        taskFirst.setId(task1.getId());
         newTM.updateTask(taskFirst);
 
-        Task taskSecond = newTM.getTaskByIndex(taskFirst.getId());
+        newTM.getTaskByIndex(taskFirst.getId());
 
         Epic epic1 = new Epic("Новый год", "Подготовка к нг");
         newTM.addEpic(epic1);
 
-        Subtask subtask1 = new Subtask(Status.NEW, "Выбрать и купить салют", "Салют",Duration.ofMinutes(40), LocalDateTime.now().minusHours(3), epic1);
+        Subtask subtask1 = new Subtask(Status.NEW, "Выбрать и купить салют", "Салют",Duration.ofMinutes(40), LocalDateTime.now().minusMonths(3), epic1);
         newTM.addSubtask(subtask1);
 
-        Subtask subtask2 = new Subtask(Status.NEW, "Пригласить близких", "Обзвонить близких",Duration.ofMinutes(20), LocalDateTime.now().minusHours(2), epic1);
+        Subtask subtask2 = new Subtask(Status.NEW, "Пригласить близких", "Обзвонить близких",Duration.ofMinutes(20), LocalDateTime.now().minusWeeks(1), epic1);
         newTM.addSubtask(subtask2);
+
+        Subtask subtask3 = new Subtask(Status.DONE, "Выбрать и купить салют1", "Салют1",Duration.ofMinutes(30), LocalDateTime.now().minusHours(1), epic1);
+        subtask3.setId(subtask1.getId());
+        newTM.updateSubtask(subtask3);
         printAllTasks(newTM);
         System.out.println();
 
@@ -54,13 +58,12 @@ public class Main {
             System.out.println(restoreFBTM.getAllTasks());
             System.out.println(restoreFBTM.getAllEpics());
             System.out.println(restoreFBTM.getAllSubtasks());
-            System.out.println(restoreFBTM.getPrioritizedTasksSet());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Файла нет.");
         } finally {
             tempfile.deleteOnExit();
         }
-//        System.out.println(newTM.getPrioritizedTasksSet());
+        System.out.println(newTM.getPrioritizedTasks());
 //        printSprint6WorkProgram();
 //        printSprint7WorkProgram();
     }

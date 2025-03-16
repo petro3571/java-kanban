@@ -29,14 +29,15 @@ public class InMemoryHistoryManagerTest extends AbstractClassTMTest {
 
     @Test
     void shouldBeNotDoubleTaskInHistory() {
-        Task task1 = new Task(Status.NEW, "description1", "name1");
+        Task task1 = new Task(Status.NEW, "description1", "name1", Duration.ofMinutes(1), LocalDateTime.now().minusWeeks(1));
         taskManager.addTask(task1);
 
-        Task newtask = taskManager.getTaskByIndex(task1.getId());
-        newtask.setStatus(Status.IN_PROGRESS);
-        taskManager.updateTask(task1);
+        Task newTask = new Task(Status.NEW, "description1", "name1", Duration.ofMinutes(1), LocalDateTime.now().minusWeeks(2));
 
-        Task newTask1 = taskManager.getTaskByIndex(newtask.getId());
+        newTask.setId(task1.getId());
+        taskManager.updateTask(newTask);
+
+        taskManager.getTaskByIndex(newTask.getId());
 
         List<Task> newList = taskManager.getHistory();
 
@@ -45,36 +46,24 @@ public class InMemoryHistoryManagerTest extends AbstractClassTMTest {
 
     @Test
     void shouldeBCurrDelete() {
-        Task task1 = new Task(Status.NEW, "description1", "task1", Duration.ofMinutes(30), LocalDateTime.now().minusHours(1));
+        Task task1 = new Task(Status.NEW, "description1", "name1", Duration.ofMinutes(1), LocalDateTime.now().minusWeeks(1));
         taskManager.addTask(task1);
 
-        Task taskFirst = taskManager.getTaskByIndex(task1.getId());
-        taskFirst.setStatus(Status.IN_PROGRESS);
-        taskManager.updateTask(taskFirst);
+        Task newTask = new Task(Status.NEW, "description1", "name1", Duration.ofMinutes(1), LocalDateTime.now().minusWeeks(2));
 
-        Task taskSecond = taskManager.getTaskByIndex(taskFirst.getId());
+        newTask.setId(task1.getId());
+        taskManager.updateTask(newTask);
+
+        taskManager.getTaskByIndex(newTask.getId());
 
         Epic epic1 = new Epic("epic1", "descriptionEpic1");
         taskManager.addEpic(epic1);
 
-        Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1", epic1);
+        Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1",Duration.ofMinutes(1), LocalDateTime.now().minusYears(1), epic1);
         taskManager.addSubtask(subtask1);
 
-        Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2", epic1);
+        Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2",Duration.ofMinutes(2), LocalDateTime.now().minusMonths(5), epic1);
         taskManager.addSubtask(subtask2);
-
-        subtask1.setStatus(Status.IN_PROGRESS);
-        taskManager.updateSubtask(subtask1);
-        taskManager.getSubtaskByIndex(subtask1.getId()); //обновленный субтаск1
-        taskManager.updateSubtask(subtask1);
-
-        subtask2.setStatus(Status.DONE);
-        taskManager.updateSubtask(subtask2);
-        taskManager.getSubtaskByIndex(subtask2.getId()); // обновленный субтаск2
-
-
-        subtask2.setStatus(Status.DONE);
-        taskManager.updateSubtask(subtask2);
 
         taskManager.deleteSubtaskByIndex(subtask1.getId());
 

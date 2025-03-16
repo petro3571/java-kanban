@@ -105,14 +105,6 @@ public class Task {
         return startTime.plus(duration);
     }
 
-    public boolean isTimeCross(Task task) {
-        if (task.getStartTime() == null || task.getEndTime() == null ||
-                this.getStartTime() == null || this.getEndTime() == null) {
-            return false;
-        }
-        return !(this.getStartTime().isAfter(task.getEndTime()) || this.getEndTime().isBefore(task.getStartTime()));
-    }
-
     @Override
     public String toString() {
         return "Task{" +

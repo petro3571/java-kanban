@@ -35,19 +35,19 @@ public class FileBackedTaskManagerTest {
 
         @Test
         void shouldBeCurrCountAfterAddTask() throws IOException {
-            Task task1 = new Task(Status.NEW, "description1", "task1", Duration.ofMinutes(10), LocalDateTime.now().minusHours(1));
+            Task task1 = new Task(Status.NEW, "description1", "task1", Duration.ofMinutes(10), LocalDateTime.now().minusYears(1));
             taskManager.addTask(task1);
 
-            Task task2 = new Task(Status.NEW, "description2", "task2", Duration.ofMinutes(1), LocalDateTime.now().minusHours(3));
+            Task task2 = new Task(Status.NEW, "description2", "task2", Duration.ofMinutes(1), LocalDateTime.now().minusMonths(3));
             taskManager.addTask(task2);
 
             Epic epic1 = new Epic("epic1", "descriptionEpic1");
             taskManager.addEpic(epic1);
 
-            Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1",Duration.ofMinutes(20), LocalDateTime.now().minusHours(2),epic1);
+            Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1",Duration.ofMinutes(20), LocalDateTime.now().minusWeeks(3),epic1);
             taskManager.addSubtask(subtask1);
 
-            Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2",Duration.ofMinutes(40), LocalDateTime.now().minusHours(3), epic1);
+            Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2",Duration.ofMinutes(40), LocalDateTime.now().minusDays(1), epic1);
             taskManager.addSubtask(subtask2);
 
             FileBackedTaskManager restoreFBTM = FileBackedTaskManager.loadFromFile(tempFile.toPath());
