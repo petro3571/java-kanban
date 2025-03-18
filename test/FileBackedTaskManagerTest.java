@@ -1,4 +1,6 @@
+import exceptions.ManagerSaveException;
 import manager.FileBackedTaskManager;
+import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import typetask.Epic;
@@ -8,10 +10,13 @@ import typetask.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FileBackedTaskManagerTest extends AbstractClassTMTest {
+public class FileBackedTaskManagerTest {
         File tempFile;
 
         {
@@ -21,6 +26,7 @@ public class FileBackedTaskManagerTest extends AbstractClassTMTest {
                 throw new RuntimeException(ex);
             }
         }
+    TaskManager taskManager;
 
     @BeforeEach
     public void beforeEach() {
@@ -29,26 +35,36 @@ public class FileBackedTaskManagerTest extends AbstractClassTMTest {
 
         @Test
         void shouldBeCurrCountAfterAddTask() throws IOException {
-            Task task1 = new Task(Status.NEW, "Купить продукты", "Лента");
+            Task task1 = new Task(Status.NEW, "description1", "task1", Duration.ofMinutes(10), LocalDateTime.now().minusYears(1));
             taskManager.addTask(task1);
 
-            Task task2 = new Task(Status.NEW, "Полный бак аи", "Крайснефть");
+            Task task2 = new Task(Status.NEW, "description2", "task2", Duration.ofMinutes(1), LocalDateTime.now().minusMonths(3));
             taskManager.addTask(task2);
 
-            Epic epic1 = new Epic("Новый год", "Подготовка к нг");
+            Epic epic1 = new Epic("epic1", "descriptionEpic1");
             taskManager.addEpic(epic1);
 
-            Subtask subtask1 = new Subtask(Status.NEW, "Выбрать и купить салют", "Салют", epic1);
+            Subtask subtask1 = new Subtask(Status.NEW, "descriptionSub1", "subtask1",Duration.ofMinutes(20), LocalDateTime.now().minusWeeks(3),epic1);
             taskManager.addSubtask(subtask1);
 
-            Subtask subtask2 = new Subtask(Status.NEW, "Пригласить близких", "Обзвонить близких", epic1);
+            Subtask subtask2 = new Subtask(Status.NEW, "descriptionSub2", "subtask2",Duration.ofMinutes(40), LocalDateTime.now().minusDays(1), epic1);
             taskManager.addSubtask(subtask2);
 
             FileBackedTaskManager restoreFBTM = FileBackedTaskManager.loadFromFile(tempFile.toPath());
 
-            Task newTask1 = new Task(Status.NEW, "new1", "newname1");
+            Task newTask1 = new Task(Status.NEW, "new1", "newname1", Duration.ofMinutes(10), LocalDateTime.now().minusHours(4));
             restoreFBTM.addTask(newTask1);
             int indexOfRestoreTaskManager = restoreFBTM.getAllTasks().size() + restoreFBTM.getAllEpics().size() + restoreFBTM.getAllSubtasks().size();
             assertEquals(6, indexOfRestoreTaskManager);
+        }
+
+        @Test
+        void shouldBeExceptionWithAddTaskWithSameTime() {
+            Task task1 = new Task(Status.NEW, "description1", "task1", Duration.ofMinutes(30), LocalDateTime.now().minusHours(1));
+            taskManager.addTask(task1);
+
+            Task task2 = new Task(Status.NEW, "description2", "task2", Duration.ofMinutes(30), LocalDateTime.now().minusHours(1));
+
+            assertThrows(ManagerSaveException.class, () -> taskManager.addTask(task2), "Пересечение времен");
         }
 }
