@@ -59,5 +59,4 @@ class HistoryHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_HISTORY, UNKNOWN}
-}
+    enum Endpoint{GET_HISTORY, UNKNOWN}}
