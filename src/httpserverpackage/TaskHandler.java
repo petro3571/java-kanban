@@ -72,7 +72,7 @@ class TaskHandler implements HttpHandler {
 
     private void handleDeleteTask(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор задачи", 404);
             return;
         }
@@ -148,5 +148,11 @@ class TaskHandler implements HttpHandler {
         }
     }
 
-    enum Endpoint {GET_TASKS,GET_TASKS_BY_ID,POST_TASKS,DELETE_TASK,UNKNOWN}
+    enum Endpoint {
+        GET_TASKS,
+        GET_TASKS_BY_ID,
+        POST_TASKS,
+        DELETE_TASK,
+        UNKNOWN
+    }
 }

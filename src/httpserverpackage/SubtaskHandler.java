@@ -55,13 +55,13 @@ class SubtaskHandler implements HttpHandler {
 
     private void handleGetSubTaskById(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор подзадачи", 404);
             return;
         }
         int subtaskId = taskIdOpt.get();
 
-        if(taskManager.getSubtaskByIndex(subtaskId) == null) {
+        if (taskManager.getSubtaskByIndex(subtaskId) == null) {
             writeResponse(exchange, "Такой подзадачи нет", 404);
             return;
         }
@@ -72,13 +72,13 @@ class SubtaskHandler implements HttpHandler {
 
     private void handleDeleteSubtask(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор задачи", 404);
             return;
         }
         int subtaskId = taskIdOpt.get();
 
-        if(taskManager.getSubtaskByIndex(subtaskId) == null) {
+        if (taskManager.getSubtaskByIndex(subtaskId) == null) {
             writeResponse(exchange, "Такой задачи нет", 404);
             return;
         }
@@ -124,7 +124,7 @@ class SubtaskHandler implements HttpHandler {
         if (pathParts.length == 2 && pathParts[1].equals("subtasks")) {
             if (requestMethod.equals("GET")) {
                 return Endpoint.GET_SUBTASKS;
-            } else if( requestMethod.equals("POST")) {
+            } else if (requestMethod.equals("POST")) {
                 return Endpoint.POST_SUBTASK;
             }
         }
@@ -149,5 +149,11 @@ class SubtaskHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_SUBTASKS,GET_SUBTASK_BY_ID,POST_SUBTASK,DELETE_SUBTASK,UNKNOWN}
+    enum Endpoint {
+        GET_SUBTASKS,
+        GET_SUBTASK_BY_ID,
+        POST_SUBTASK,
+        DELETE_SUBTASK,
+        UNKNOWN
+    }
 }

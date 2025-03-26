@@ -59,5 +59,8 @@ class PrioritizedHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_PRIORITIZED,UNKNOWN}
+    enum Endpoint {
+        GET_PRIORITIZED,
+        UNKNOWN
+    }
 }

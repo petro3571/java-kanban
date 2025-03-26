@@ -57,13 +57,13 @@ class EpicHandler implements HttpHandler {
 
     private void handleGetEpicById(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор подзадачи", 404);
             return;
         }
         int epicId = taskIdOpt.get();
 
-        if(taskManager.getEpicByIndex(epicId) == null) {
+        if (taskManager.getEpicByIndex(epicId) == null) {
             writeResponse(exchange, "Такого эпика нет", 404);
             return;
         }
@@ -74,13 +74,13 @@ class EpicHandler implements HttpHandler {
 
     private void handleDeleteEpic(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор задачи", 404);
             return;
         }
         int epicId = taskIdOpt.get();
 
-        if(taskManager.getEpicByIndex(epicId) == null) {
+        if (taskManager.getEpicByIndex(epicId) == null) {
             writeResponse(exchange, "Такого эпика нет", 404);
             return;
         }
@@ -97,8 +97,8 @@ class EpicHandler implements HttpHandler {
         }
         try {
             Epic epic = gson.fromJson(body, Epic.class);
-                taskManager.addEpic(epic);
-                writeResponse(exchange, "Эпик добавлен.", 201);
+            taskManager.addEpic(epic);
+            writeResponse(exchange, "Эпик добавлен.", 201);
 
         } catch (JsonSyntaxException e) {
             writeResponse(exchange, "Некорректный JSON", 400);
@@ -107,13 +107,13 @@ class EpicHandler implements HttpHandler {
 
     private void handleGetEpicsSubtasksIds(HttpExchange exchange) throws IOException {
         Optional<Integer> taskIdOpt = getTaskId(exchange);
-        if(taskIdOpt.isEmpty()) {
+        if (taskIdOpt.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор задачи", 404);
             return;
         }
         int epicId = taskIdOpt.get();
 
-        if(taskManager.getEpicByIndex(epicId) == null) {
+        if (taskManager.getEpicByIndex(epicId) == null) {
             writeResponse(exchange, "Такого эпика нет", 404);
             return;
         }
@@ -138,7 +138,7 @@ class EpicHandler implements HttpHandler {
         if (pathParts.length == 2 && pathParts[1].equals("epics")) {
             if (requestMethod.equals("GET")) {
                 return Endpoint.GET_EPICS;
-            } else if( requestMethod.equals("POST")) {
+            } else if (requestMethod.equals("POST")) {
                 return Endpoint.POST_EPIC;
             }
         }
@@ -168,5 +168,12 @@ class EpicHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_EPICS, GET_EPIC_BY_ID, POST_EPIC, DELETE_EPIC,GET_EPICS_SUBTASKSIDS,UNKNOWN}
+    enum Endpoint {
+        GET_EPICS,
+        GET_EPIC_BY_ID,
+        POST_EPIC,
+        DELETE_EPIC,
+        GET_EPICS_SUBTASKSIDS,
+        UNKNOWN
+    }
 }
