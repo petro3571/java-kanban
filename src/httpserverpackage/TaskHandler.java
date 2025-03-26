@@ -124,7 +124,7 @@ class TaskHandler implements HttpHandler {
         if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
             if (requestMethod.equals("GET")) {
                 return Endpoint.GET_TASKS;
-            } else if ( requestMethod.equals("POST")) {
+            } else if (requestMethod.equals("POST")) {
                 return Endpoint.POST_TASKS;
             }
         }
