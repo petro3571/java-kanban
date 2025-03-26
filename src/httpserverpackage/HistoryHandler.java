@@ -1,4 +1,4 @@
-package HttpServerPackage;
+package httpserverpackage;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-class PrioritizedHandler implements HttpHandler {
+class HistoryHandler implements HttpHandler {
     TaskManager taskManager;
     Gson gson;
 
-    public PrioritizedHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
         gson = Managers.getGson();
     }
@@ -24,8 +24,8 @@ class PrioritizedHandler implements HttpHandler {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
         switch (endpoint) {
-            case GET_PRIORITIZED: {
-                handleGetPrioritized(exchange);
+            case GET_HISTORY: {
+                handleGetHistory(exchange);
                 break;
             }
             default:
@@ -33,17 +33,17 @@ class PrioritizedHandler implements HttpHandler {
         }
     }
 
-    private void handleGetPrioritized(HttpExchange exchange) throws IOException {
-        String response = taskManager.getPrioritizedTasks().toString();
+    private void handleGetHistory(HttpExchange exchange) throws IOException {
+        String response = taskManager.getHistory().toString();
         writeResponse(exchange, response, 200);
     }
 
     private Endpoint getEndpoint(String requestPath, String requestMethod) {
         String[] pathParts = requestPath.split("/");
 
-        if (pathParts.length == 2 && pathParts[1].equals("prioritized")) {
+        if (pathParts.length == 2 && pathParts[1].equals("history")) {
             if (requestMethod.equals("GET")) {
-                return Endpoint.GET_PRIORITIZED;
+                return Endpoint.GET_HISTORY;
             }
         }
         return Endpoint.UNKNOWN;
@@ -59,5 +59,5 @@ class PrioritizedHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_PRIORITIZED, UNKNOWN}
+    enum Endpoint {GET_HISTORY, UNKNOWN}
 }

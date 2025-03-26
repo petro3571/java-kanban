@@ -1,4 +1,4 @@
-import HttpServerPackage.HttpTaskServer;
+import httpserverpackage.HttpTaskServer;
 import com.google.gson.Gson;
 import manager.TaskManager;
 import org.junit.jupiter.api.Test;

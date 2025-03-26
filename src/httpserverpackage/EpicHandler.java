@@ -1,4 +1,4 @@
-package HttpServerPackage;
+package httpserverpackage;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
@@ -168,5 +168,5 @@ class EpicHandler implements HttpHandler {
         exchange.close();
     }
 
-    enum Endpoint {GET_EPICS, GET_EPIC_BY_ID, POST_EPIC, DELETE_EPIC,GET_EPICS_SUBTASKSIDS, UNKNOWN}
+    enum Endpoint {GET_EPICS, GET_EPIC_BY_ID, POST_EPIC, DELETE_EPIC,GET_EPICS_SUBTASKSIDS,UNKNOWN}
 }
