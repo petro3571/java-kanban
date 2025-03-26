@@ -95,7 +95,6 @@ class TaskHandler implements HttpHandler {
         }
         try {
             Task task = gson.fromJson(body, Task.class);
-//            taskManager.isTaskCrossAnother(task);
             if (task.getId() == null) {
                 taskManager.addTask(task);
                 writeResponse(exchange, "Задача добавлена.", 201);

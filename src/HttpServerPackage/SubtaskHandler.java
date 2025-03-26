@@ -95,7 +95,6 @@ class SubtaskHandler implements HttpHandler {
         }
         try {
             Subtask subtask = gson.fromJson(body, Subtask.class);
-//            taskManager.isTaskCrossAnother(task);
             if (subtask.getId() == null) {
                 taskManager.addSubtask(subtask);
                 writeResponse(exchange, "ПодЗадача добавлена.", 201);

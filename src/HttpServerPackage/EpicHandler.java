@@ -121,7 +121,6 @@ class EpicHandler implements HttpHandler {
         Epic epic = taskManager.getEpicByIndex(epicId);
         String response = epic.getSubtasksIds().toString();
         writeResponse(exchange, "Задача выполнена " + response, 200);
-
     }
 
     private Optional<Integer> getTaskId(HttpExchange exchange) {
