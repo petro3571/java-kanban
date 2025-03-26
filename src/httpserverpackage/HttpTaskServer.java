@@ -28,11 +28,11 @@ public class HttpTaskServer {
         httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
     }
 
-    public static void main(String[] args) throws IOException {
-        HttpTaskServer server = new HttpTaskServer();
-        server.start();
-        server.stop();
-    }
+//    public static void main(String[] args) throws IOException {
+//        HttpTaskServer server = new HttpTaskServer();
+//        server.start();
+//        server.stop();
+//    }
 
     public void start() {
         System.out.println("Старт сервера " + PORT);
