@@ -132,7 +132,7 @@ abstract class AbstractClassTMTest<T extends TaskManager> {
 
         Subtask subtask4 = new Subtask(Status.DONE, "Пригласить близких", "Обзвонить близких",Duration.ofMinutes(1), LocalDateTime.now(), epic1);
 
-        subtask3.setId(subtask2.getId());
+        subtask4.setId(subtask2.getId());
         taskManager.updateSubtask(subtask4);
 
         taskManager.getSubtaskByIndex(subtask1.getId());

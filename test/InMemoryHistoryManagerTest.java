@@ -67,7 +67,7 @@ public class InMemoryHistoryManagerTest extends AbstractClassTMTest {
 
         taskManager.deleteSubtaskByIndex(subtask1.getId());
 
-        assertEquals(2, taskManager.getHistory().size());
-        assertEquals(4, taskManager.getHistory().get(1).getId());
+        assertEquals(3, taskManager.getHistory().size());
+        assertEquals(2, taskManager.getHistory().get(1).getId());
     }
 }

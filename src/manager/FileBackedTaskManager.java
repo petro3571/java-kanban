@@ -142,7 +142,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 return new Task(id, status, description, name, duration, localDateTime);
             case EPIC:
                 List<Integer> newListSubId = new ArrayList<>();
-                return new Epic(id,status,name,description,newListSubId, duration, localDateTime);
+                return new Epic(id,status,description,name,newListSubId, duration, localDateTime);
             case SUBTASK:
                 int epicId = Integer.parseInt(splitString[7]);
                 Epic epic = fileBackedTaskManager.getEpicByIndex(epicId);

@@ -32,7 +32,7 @@ public class Main {
 
         newTM.getTaskByIndex(taskFirst.getId());
 
-        Epic epic1 = new Epic("Новый год", "Подготовка к нг");
+        Epic epic1 = new Epic("Подготовка к нг", "Новый год");
         newTM.addEpic(epic1);
 
         Subtask subtask1 = new Subtask(Status.NEW, "Выбрать и купить салют", "Салют",Duration.ofMinutes(40), LocalDateTime.now().minusMonths(3), epic1);
