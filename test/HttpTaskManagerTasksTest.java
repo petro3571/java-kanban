@@ -331,4 +331,64 @@ public class HttpTaskManagerTasksTest {
         List<Task> prioritizedFromManager = taskServer.getTaskManager().getPrioritizedTasks();
         assertEquals(1, prioritizedFromManager.size(), "Некорректное количество задач");
     }
+
+    @Test
+    public void testDeleteTask() throws IOException, InterruptedException {
+        Task task = new Task(Status.NEW, "Testing task 2",
+                "Test 2", Duration.ofMinutes(5), LocalDateTime.now().minusYears(30));
+        manager.addTask(task);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/1");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().header("Accept", "application/json").build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        List<Task> tasksFromManager = manager.getAllTasks();
+
+        assertEquals(0, tasksFromManager.size(), "Задача не удалена");
+    }
+
+    @Test
+    public void testDeleteEpic() throws IOException, InterruptedException {
+        Epic epic1 = new Epic("epic1Dis", "epic1");
+        manager.addEpic(epic1);
+
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/epics/1");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().header("Accept", "application/json").build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        List<Epic> EpicsFromManager = manager.getAllEpics();
+
+        assertEquals(0, EpicsFromManager.size(), "Эпик не удален");
+    }
+
+    @Test
+    public void testDeleteSubtask() throws IOException, InterruptedException {
+        Epic epic1 = new Epic("epic1Dis", "epic1");
+        manager.addEpic(epic1);
+
+        Subtask subtask1 = new Subtask(Status.NEW, "subtask1Dis", "subtask1", Duration.ofMinutes(40), LocalDateTime.now().minusMonths(1), epic1);
+        manager.addSubtask(subtask1);
+
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/subtasks/2");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().header("Accept", "application/json").build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
+        List<Subtask> SubtasksFromManager = manager.getAllSubtasks();
+
+        assertEquals(0, SubtasksFromManager.size(), "Подзадача не удалена");
+    }
 }

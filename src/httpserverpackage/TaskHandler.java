@@ -2,21 +2,17 @@ package httpserverpackage;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import exceptions.ManagerSaveException;
 import manager.Managers;
 import manager.TaskManager;
 import typetask.Task;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class TaskHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+class TaskHandler extends BaseHttpHandler {
 
     public TaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -32,15 +28,15 @@ class TaskHandler implements HttpHandler {
                 handleGetTasks(exchange);
                 break;
             }
-            case GET_TASKS_BY_ID: {
+            case GET_TASK_BY_ID: {
                 handleGetTaskById(exchange);
                 break;
             }
-            case POST_TASKS: {
-                    handlePostTask(exchange);
-                    break;
+            case POST_TASK: {
+                handlePostTask(exchange);
+                break;
             }
-            case DELETE_TASK : {
+            case DELETE_TASK: {
                 handleDeleteTask(exchange);
             }
             default:
@@ -122,37 +118,20 @@ class TaskHandler implements HttpHandler {
         String[] pathParts = requestPath.split("/");
 
         if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
-            if (requestMethod.equals("GET")) {
+            if (requestMethod.equals(METHOD_GET)) {
                 return Endpoint.GET_TASKS;
-            } else if (requestMethod.equals("POST")) {
-                return Endpoint.POST_TASKS;
+            } else if (requestMethod.equals(METHOD_POST)) {
+                return Endpoint.POST_TASK;
             }
         }
         if (pathParts.length == 3 && pathParts[1].equals("tasks")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_TASKS_BY_ID;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_TASK_BY_ID;
             }
-            if (requestMethod.equals("DELETE")) {
+            if (requestMethod.equals(METHOD_DELETE)) {
                 return Endpoint.DELETE_TASK;
             }
         }
         return Endpoint.UNKNOWN;
-    }
-
-    private void writeResponse(HttpExchange exchange,
-                               String responseString,
-                               int responseCode) throws IOException {
-        exchange.sendResponseHeaders(responseCode, 0);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(responseString.getBytes(StandardCharsets.UTF_8));
-        }
-    }
-
-    enum Endpoint {
-        GET_TASKS,
-        GET_TASKS_BY_ID,
-        POST_TASKS,
-        DELETE_TASK,
-        UNKNOWN
     }
 }

@@ -2,20 +2,16 @@ package httpserverpackage;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import manager.Managers;
 import manager.TaskManager;
 import typetask.Epic;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class EpicHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+class EpicHandler extends BaseHttpHandler {
 
     public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -27,22 +23,22 @@ class EpicHandler implements HttpHandler {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
         switch (endpoint) {
-            case GET_EPICS: {
+            case GET_TASKS: {
                 handleGetEpics(exchange);
                 break;
             }
-            case GET_EPIC_BY_ID: {
+            case GET_TASK_BY_ID: {
                 handleGetEpicById(exchange);
                 break;
             }
-            case POST_EPIC: {
+            case POST_TASK: {
                 handlePostEpic(exchange);
                 break;
             }
-            case DELETE_EPIC: {
+            case DELETE_TASK: {
                 handleDeleteEpic(exchange);
             }
-            case GET_EPICS_SUBTASKSIDS: {
+            case GET_EPIC_SUBTASKSIDS: {
                 handleGetEpicsSubtasksIds(exchange);
             }
             default:
@@ -136,44 +132,25 @@ class EpicHandler implements HttpHandler {
         String[] pathParts = requestPath.split("/");
 
         if (pathParts.length == 2 && pathParts[1].equals("epics")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_EPICS;
-            } else if (requestMethod.equals("POST")) {
-                return Endpoint.POST_EPIC;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_TASKS;
+            } else if (requestMethod.equals(METHOD_POST)) {
+                return Endpoint.POST_TASK;
             }
         }
         if (pathParts.length == 3 && pathParts[1].equals("epics")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_EPIC_BY_ID;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_TASK_BY_ID;
             }
-            if (requestMethod.equals("DELETE")) {
-                return Endpoint.DELETE_EPIC;
+            if (requestMethod.equals(METHOD_DELETE)) {
+                return Endpoint.DELETE_TASK;
             }
         }
         if (pathParts.length == 4 && pathParts[1].equals("epics") && pathParts[3].equals("subtasks")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_EPICS_SUBTASKSIDS;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_EPIC_SUBTASKSIDS;
             }
         }
         return Endpoint.UNKNOWN;
-    }
-
-    private void writeResponse(HttpExchange exchange,
-                               String responseString,
-                               int responseCode) throws IOException {
-        try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(responseCode, 0);
-            os.write(responseString.getBytes(StandardCharsets.UTF_8));
-        }
-        exchange.close();
-    }
-
-    enum Endpoint {
-        GET_EPICS,
-        GET_EPIC_BY_ID,
-        POST_EPIC,
-        DELETE_EPIC,
-        GET_EPICS_SUBTASKSIDS,
-        UNKNOWN
     }
 }

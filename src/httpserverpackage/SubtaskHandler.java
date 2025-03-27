@@ -2,21 +2,17 @@ package httpserverpackage;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import exceptions.ManagerSaveException;
 import manager.Managers;
 import manager.TaskManager;
 import typetask.Subtask;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class SubtaskHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+class SubtaskHandler extends BaseHttpHandler {
 
     public SubtaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -28,19 +24,19 @@ class SubtaskHandler implements HttpHandler {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
         switch (endpoint) {
-            case GET_SUBTASKS: {
+            case GET_TASKS: {
                 handleGetSubTasks(exchange);
                 break;
             }
-            case GET_SUBTASK_BY_ID: {
+            case GET_TASK_BY_ID: {
                 handleGetSubTaskById(exchange);
                 break;
             }
-            case POST_SUBTASK: {
+            case POST_TASK: {
                 handlePostSubTask(exchange);
                 break;
             }
-            case DELETE_SUBTASK: {
+            case DELETE_TASK: {
                 handleDeleteSubtask(exchange);
             }
             default:
@@ -122,38 +118,20 @@ class SubtaskHandler implements HttpHandler {
         String[] pathParts = requestPath.split("/");
 
         if (pathParts.length == 2 && pathParts[1].equals("subtasks")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_SUBTASKS;
-            } else if (requestMethod.equals("POST")) {
-                return Endpoint.POST_SUBTASK;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_TASKS;
+            } else if (requestMethod.equals(METHOD_POST)) {
+                return Endpoint.POST_TASK;
             }
         }
         if (pathParts.length == 3 && pathParts[1].equals("subtasks")) {
-            if (requestMethod.equals("GET")) {
-                return Endpoint.GET_SUBTASK_BY_ID;
+            if (requestMethod.equals(METHOD_GET)) {
+                return Endpoint.GET_TASK_BY_ID;
             }
-            if (requestMethod.equals("DELETE")) {
-                return Endpoint.DELETE_SUBTASK;
+            if (requestMethod.equals(METHOD_DELETE)) {
+                return Endpoint.DELETE_TASK;
             }
         }
         return Endpoint.UNKNOWN;
-    }
-
-    private void writeResponse(HttpExchange exchange,
-                               String responseString,
-                               int responseCode) throws IOException {
-        try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(responseCode, 0);
-            os.write(responseString.getBytes(StandardCharsets.UTF_8));
-        }
-        exchange.close();
-    }
-
-    enum Endpoint {
-        GET_SUBTASKS,
-        GET_SUBTASK_BY_ID,
-        POST_SUBTASK,
-        DELETE_SUBTASK,
-        UNKNOWN
     }
 }
