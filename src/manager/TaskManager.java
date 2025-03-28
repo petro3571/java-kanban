@@ -50,7 +50,7 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    void setDurationStartAndEndTimeEpic(Epic epic);
+    void setDurationStartAndEndTimeEpic(Integer epicId);
 
     void isTaskCrossAnother(Task task);
 }

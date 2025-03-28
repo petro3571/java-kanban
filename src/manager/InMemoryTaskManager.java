@@ -67,9 +67,8 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setId(idCounter());
             subtasks.put(subtask.getId(), subtask);
             epic.addSubtasksId(subtask.getId());
-            setDurationStartAndEndTimeEpic(subtask.getEpic());
+            setDurationStartAndEndTimeEpic(subtask.getEpic().getId());
             prioritizedTasksSet.add(subtask);
-
         }
     }
 
@@ -117,7 +116,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask subtask) {
         if (subtask != null) {
             try {
-                isTaskCrossAnother(subtask); // Проверка перекрытия
+                isTaskCrossAnother(subtask);
             } catch (ManagerSaveException e) {
                 throw new ManagerSaveException("Ошибка: пересечение времен.");
             }
@@ -125,9 +124,9 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = subtask.getEpic();
             if (epic != null) {
                 updateEpicStatus(epic);
-                setDurationStartAndEndTimeEpic(epic);
+                setDurationStartAndEndTimeEpic(epic.getId());
                 for (Task t : getPrioritizedTasks()) {
-                    if (subtask.getId() == t.getId()) {
+                    if (subtask.getId().equals(t.getId())) {
                         prioritizedTasksSet.remove(t);
                     }
                 }
@@ -138,9 +137,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskByIndex(int id) {
-        tasks.remove(id);
-        historyManager.remove(id);
         prioritizedTasksSet.remove(getTaskByIndex(id));
+        historyManager.remove(id);
+        tasks.remove(id);
     }
 
     @Override
@@ -163,7 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (epic != null) {
                 epic.deleteSubtasksId(subtask.getId());
                 updateEpicStatus(epic);
-                setDurationStartAndEndTimeEpic(epic);
+                setDurationStartAndEndTimeEpic(epic.getId());
                 historyManager.remove(subtask.getId());
                 for (Task t : getPrioritizedTasks()) {
                     if (subtask.getId() == t.getId()) {
@@ -276,16 +275,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void setDurationStartAndEndTimeEpic(Epic epic) {
+    public void setDurationStartAndEndTimeEpic(/*Epic epic*/Integer epicId) {
+        Epic epic = getEpicByIndex(epicId);
         List<Integer> newList = epic.getSubtasksIds();
         Duration newDuration = Duration.ZERO;
         for (Integer id : newList) {
             Subtask newSubtask = getSubtaskByIndex(id);
             LocalDateTime endSubTaskTime = newSubtask.getEndTime();
-            if (epic.getStartTime() == null || newSubtask.getStartTime().isBefore(epic.getStartTime())) {
+            if (epic.getStartTime().equals(LocalDateTime.of(1980, 1,1, 1,1)) || newSubtask.getStartTime().isBefore(epic.getStartTime())) {
                 epic.setStartTime(newSubtask.getStartTime());
+            } else {
+                if (!(epic.getStartTime().equals(newSubtask.getStartTime()))) {
+                    epic.setStartTime(newSubtask.getStartTime());
+                }
             }
-            if (epic.getEndTime() == null || newSubtask.getEndTime().isAfter(epic.getEndTime())) {
+            if (epic.getEndTime().equals(LocalDateTime.of(1980, 1,1, 1,2)) || newSubtask.getEndTime().isAfter(epic.getEndTime())) {
                 epic.setEndTime(endSubTaskTime);
             }
             epic.setDuration(newDuration.plus(newSubtask.getDuration()));
